@@ -8,10 +8,36 @@ const LoginScreen = () => {
     const [cedula, setCedula] = useState('');
     const [contrasenia, setContrasenia] = useState('');
     const [error, setError] = useState('');
+    const [isFormValid, setIsFormValid] = useState(false);
 
     const navigation = useNavigation();
 
+    // Función para manejar el inicio de sesión
     const handleLogin = async () => {
+        try {
+            // Realizar el inicio de sesión
+            const response = await login(cedula, contrasenia);
+            const { message, rol } = response;
+
+            // Mostrar mensaje de inicio de sesión exitoso
+            console.log(message);
+
+            // Redirigir a diferentes pantallas según el rol del usuario
+            if (rol === 'Tecnico') {
+                navigation.navigate('Tabs'); // Redirigir al screen de Tabs (Técnico)
+            } else if (rol === 'Estudiante') {
+                navigation.navigate('TabsPersona'); // Redirigir al screen de HomeScreen (Estudiante)
+            } else if (rol === 'Docente') {
+                navigation.navigate('TabsPersona'); // Redirigir al screen de HomeScreen (Docente)
+            }
+        } catch (error) {
+            // Manejar error de inicio de sesión
+            console.error('Error al iniciar sesión:', error);
+        }
+    };
+
+
+    /* const handleLogin = async () => {
         try {
             const user = await login(cedula, contrasenia);
             if (user) {
@@ -27,7 +53,7 @@ const LoginScreen = () => {
             console.log('Error al autenticar al usuario:', error);
             setError('Ocurrió un error al iniciar sesión');
         }
-    };
+    }; */
 
     const renderCedulaWarning = () => {
         if (cedula.length < 10) {
@@ -50,6 +76,10 @@ const LoginScreen = () => {
         }
     }
 
+    const validateForm = () => {
+        setIsFormValid(cedula.length === 10 && contrasenia.length >= 4);
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>INICIO SECION USUARIO FISEI</Text>
@@ -60,6 +90,7 @@ const LoginScreen = () => {
                 onChangeText={(text) => {
                     const numericValue = text.replace(/[^0-9]/g, "");
                     setCedula(numericValue);
+                    validateForm();
                 }}
                 maxLength={10}
                 keyboardType="numeric" // Permitir solo entrada numérica
@@ -70,12 +101,15 @@ const LoginScreen = () => {
                 placeholder="Contraseña"
                 secureTextEntry
                 value={contrasenia}
-                onChangeText={setContrasenia}
+                onChangeText={(text) => {
+                    setContrasenia(text);
+                    validateForm();
+                }}
                 maxLength={25}
             />
             {renderContraseniaWarning()}
             <Text></Text>
-            <Button title="Iniciar sesión" onPress={handleLogin} />
+            <Button title="Iniciar sesión" onPress={handleLogin} disabled={!isFormValid} />
         </View>
     );
 };

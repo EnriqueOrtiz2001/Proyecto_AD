@@ -378,7 +378,10 @@ const PersonaFormScreen = ({ navigation, route }) => {
                 <Text style={{ textAlign: "center", marginTop: 10, backgroundColor: "#EBBA5F" }}>Estudiante</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleOptionSelect("Docente")}>
-                <Text style={{ textAlign: "center", marginTop: 30, marginBottom: 30, backgroundColor: "#EBBA5F" }}>Docente</Text>
+                <Text style={{ textAlign: "center", marginTop: 30, marginBottom: 10, backgroundColor: "#EBBA5F" }}>Docente</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleOptionSelect("Tecnico")}>
+                <Text style={{ textAlign: "center", marginTop: 30, marginBottom: 30, backgroundColor: "#EBBA5F" }}>Tecnico</Text>
               </TouchableOpacity>
               <Button title="Cerrar" onPress={() => setModalVisible(false)} />
             </View>
